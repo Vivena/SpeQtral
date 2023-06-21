@@ -173,12 +173,4 @@ private:
     // other member variables and functions not shown
 };
 
-int main() {
-    KeyPoolManager kpm;
-    // configure the KeyPoolManager instance
-    // ...
-    Key k = kpm.newKey("someSiteId");
-    // use the Key object
-    // ...
-    return 0;
-}
+

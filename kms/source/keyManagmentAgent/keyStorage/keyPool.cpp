@@ -7,6 +7,7 @@ Key KeyPool::getKey() {
         key.setIndex(m_index - 1);
     }
     key.setBlockID(m_blockId);
+    
     return key;
 }
 
