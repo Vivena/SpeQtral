@@ -1,3 +1,6 @@
+#include <yaml-cpp/yaml.h>
+#include "oatpp/web/server/api/ApiController.hpp"
+
 /**
  * Represents an Oat++ controller's config that consists of a shared pointer to an Oat++ 
  * web app controller, a port, a cert file, and a key file.
@@ -13,7 +16,7 @@ public:
    * @param certFile A string representing the path to the certificate file
    * @param keyFile A string representing the path to the key file
    */
-  ControllerConfig(const std::shared_ptr<oatpp::web::app::Controller>& controller,
+  ControllerConfig(const std::shared_ptr<oatpp::web::server::api::ApiController>& controller,
                    const oatpp::String& port,
                    const oatpp::String& certFile,
                    const oatpp::String& keyFile)
@@ -23,7 +26,7 @@ public:
    * Getter method to get the value of the controller object
    * @return A shared pointer to an Oat++ web app controller object
    */
-  std::shared_ptr<oatpp::web::app::Controller> getController() const;
+  std::shared_ptr<oatpp::web::server::api::ApiController> getController() const;
   
   /**
    * Getter method to get the value of the port number
@@ -58,7 +61,7 @@ public:
 
 private:
   // Member variables of the class
-  std::shared_ptr<oatpp::web::app::Controller> m_controller; // shared pointer to web app controller
+  std::shared_ptr<oatpp::web::server::api::ApiController> m_controller; // shared pointer to web app controller
   const oatpp::String& m_port; // string to represent port
   const oatpp::String& m_certFile; // string to represent certificate file
   const oatpp::String& m_keyFile; // string to represent key file

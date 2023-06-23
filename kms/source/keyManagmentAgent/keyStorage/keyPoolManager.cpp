@@ -3,9 +3,7 @@
 #include <mutex>
 #include <condition_variable>
 
-class Key {
-    // implementation details not shown
-};
+#include "../key.hpp"
 
 class KeyPool {
 public:
@@ -16,11 +14,13 @@ public:
 
     Key getKey() const { return getKey(0); }
 
-    Key getKey(int index) const {
-        if (index < 0 || index >= static_cast<int>(m_keyBlockDst.size()))
+    const Key& getKey(int index) const {
+        if (index < 0 || index >= static_cast<int>(m_keyBlockDst.size())){
             return Key();
-        else
+        }
+        else{
             return Key(m_keyBlockDst[index]);
+        }      
     }
 
 private:

@@ -23,18 +23,30 @@ public:
      * @param hexKey The hexadecimal representation of the key.
      * @param blockID The ID of the block associated with the key.
      */
-    Key(int index, const std::string& hexKey, const std::string& blockID)
+    Key(long index, const std::string& hexKey, const std::string& blockID)
         : m_index(index)
         , m_hexKey(hexKey)
         , m_blockID(blockID)
     {}
 
     /**
+     * Copy constructor for Key class
+     *
+     * @param other The Key object to be copied.
+     */
+    Key(const Key& other)
+        : m_index(other.m_index)
+        , m_hexKey(other.m_hexKey)
+        , m_blockID(other.m_blockID)
+    {}
+
+
+    /**
      * Returns the index of the key.
      *
      * @return The index of the key.
      */
-    int getIndex() const;
+    long getIndex() const;
 
     /**
      * Sets the index of the key to the specified value.

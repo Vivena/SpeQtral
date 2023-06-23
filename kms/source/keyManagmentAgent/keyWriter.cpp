@@ -2,6 +2,8 @@
 #include <sstream>
 #include <jsoncpp/json/json.h>
 
+#include "./key.hpp"
+
 using namespace Json;
 
 /**

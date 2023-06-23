@@ -4,6 +4,7 @@
 #include <atomic>
 #include <string>
 #include <cstdint>
+
 #include "key.hpp"
 
 /**

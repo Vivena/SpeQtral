@@ -1,24 +1,24 @@
 #include "keyPool.hpp"
 
-Key KeyPool::getKey() {
+Key KeyPool::getKey(){
     Key key;
-    if (!m_keys.empty() && m_index < m_keys.size()) { 
-        key.setHexKey(m_keys[m_index.fetch_add(1, std::memory_order_relaxed)]); 
-        key.setIndex(m_index - 1);
-    }
-    key.setBlockID(m_blockId);
+    long index = m_index.fetch_add(1L, std::memory_order_acquire);
+    if (m_keys.size() > 0)
+        return Key(index, m_keys[index], m_blockId);
     
+    key.setBlockID(m_blockId);
     return key;
 }
 
-Key KeyPool::getKey(const int index) {
+Key KeyPool::getKey(const int index){
     Key key;
-    if (index >= 0 && index < m_keys.size()) {
-        key.setIndex(index);
-        key.setHexKey(m_keys.at(index));
+    if (index >= 0 && index < m_keys.size()){
+        m_index.fetch_add(1L, std::memory_order_relaxed);
+        return Key(index, m_keys.at(index), m_blockId);
     }
+
     key.setBlockID(m_blockId);
-    m_index.fetch_add(1, std::memory_order_relaxed);
+    m_index.fetch_add(1L, std::memory_order_relaxed);
     return key;
 }
 

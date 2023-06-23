@@ -1,13 +1,13 @@
-#include <vector>
 #include "oatpp/network/Server.hpp"
 #include "oatpp/network/tcp/server/ConnectionProvider.hpp"
 #include "oatpp/web/server/HttpConnectionHandler.hpp"
-#include "oatpp/web/app/Controller.hpp"
+#include "oatpp/web/server/api/ApiController.hpp"
 
-#include "./server.hpp"
+#include "server.hpp"
+#include "configService/controllerConfig.hpp"
 // include your controllers here
-#include "./Controller1.hpp"
-#include "./Controller2.hpp"
+// #include "./Controller1.hpp"
+// #include "./Controller2.hpp"
 
 
 /**
@@ -17,7 +17,7 @@
  */
 int main() {
   // Parse controller configuration data from JSON file
-  auto configs = parseControllerConfigsFromYamlFile("/path/to/config.yaml");
+  auto configs = ControllerConfig::parseControllerConfigsFromYamlFile("/path/to/config.yaml");
 
   // Create server instance
   MyServer server;
