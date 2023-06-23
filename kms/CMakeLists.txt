@@ -1,16 +1,17 @@
 cmake_minimum_required(VERSION 3.1)
 
 set(project_name SpeQtral-QKD) ## rename your project here
+set(src_folder source) ## name of the $(src_folder) folder
 
 project(${project_name})
 
 set(CMAKE_CXX_STANDARD 11)
 
 add_library(${project_name}-lib
-        src/AppComponent.hpp
-        src/controller/MyController.cpp
-        src/controller/MyController.hpp
-        src/dto/DTOs.hpp
+        $(src_folder)/AppComponent.hpp
+        $(src_folder)/controller/MyController.cpp
+        $(src_folder)/controller/MyController.hpp
+        $(src_folder)/dto/DTOs.hpp
 )
 
 ## link libs
@@ -22,12 +23,12 @@ target_link_libraries(${project_name}-lib
         PUBLIC oatpp::oatpp-test
 )
 
-target_include_directories(${project_name}-lib PUBLIC src)
+target_include_directories(${project_name}-lib PUBLIC $(src_folder))
 
 ## add executables
 
 add_executable(${project_name}-exe
-        src/App.cpp
+        $(src_folder)/main.cpp
         test/app/MyApiTestClient.hpp)
 target_link_libraries(${project_name}-exe ${project_name}-lib)
 add_dependencies(${project_name}-exe ${project_name}-lib)
