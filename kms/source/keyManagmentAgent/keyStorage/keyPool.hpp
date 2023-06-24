@@ -1,3 +1,6 @@
+#ifndef KEYPOOLMANAGER_HPP
+#define KEYPOOLMANAGER_HPP
+
 #pragma once
 
 #include <vector>
@@ -89,4 +92,4 @@ private:
 };
 
 
-
+#endif /*KEYPOOLMANAGER_HPP*/

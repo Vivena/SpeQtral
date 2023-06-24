@@ -30,28 +30,6 @@ private:
 };
 
 class KeyPoolManager {
-public:
-    KeyPoolManager() = default;
-
-    int getKeyByteSize() const { return m_byteSz; }
-    long getKeyBlockSize() const { return m_blockSz; }
-    std::string getLocalSiteId() const { return m_localSiteId; }
-
-    Key newKey(const std::string& siteId) {
-        try {
-            return fetchKey(siteId, "", -1);
-        } catch (const std::exception&) {
-            return Key();
-        }
-    }
-
-    Key getKey(const std::string& siteId, const std::string& block, long index) {
-        try {
-            return fetchKey(siteId, block, index);
-        } catch (const std::exception&) {
-            return Key();
-        }
-    }
 
 private:
     class PoolLock {
@@ -170,6 +148,28 @@ private:
         return m_poolLocks[poolName];
     }
 
+public:
+    KeyPoolManager() = default;
+
+    int getKeyByteSize() const { return m_byteSz; }
+    long getKeyBlockSize() const { return m_blockSz; }
+    std::string getLocalSiteId() const { return m_localSiteId; }
+
+    Key newKey(const std::string& siteId) {
+        try {
+            return fetchKey(siteId, "", -1);
+        } catch (const std::exception&) {
+            return Key();
+        }
+    }
+
+    Key getKey(const std::string& siteId, const std::string& block, long index) {
+        try {
+            return fetchKey(siteId, block, index);
+        } catch (const std::exception&) {
+            return Key();
+        }
+    }
     // other member variables and functions not shown
 };
 

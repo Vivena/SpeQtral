@@ -1,3 +1,5 @@
+#ifndef KEY_HPP
+#define KEY_HPP
 #include <mutex>
 
 #define EMPTY_KEY_INDEX -2
@@ -90,3 +92,4 @@ private:
     std::string m_blockID;
 };
 
+#endif /*KEY_HPP*/

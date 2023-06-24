@@ -1,6 +1,6 @@
 #include "key.hpp"
 
-int Key::getIndex() const { 
+long Key::getIndex() const { 
     std::lock_guard<std::mutex> lock(m_mutex);
     return m_index; 
 }
