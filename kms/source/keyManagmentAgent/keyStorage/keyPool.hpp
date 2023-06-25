@@ -1,6 +1,3 @@
-#ifndef KEYPOOLMANAGER_HPP
-#define KEYPOOLMANAGER_HPP
-
 #pragma once
 
 #include <vector>
@@ -8,7 +5,7 @@
 #include <string>
 #include <cstdint>
 
-#include "key.hpp"
+#include "keyManagmentAgent/key.hpp"
 
 /**
  * Represents a cryptographic keyPool that consists of an index, a block ID, and a block size and multiple keys.
@@ -90,6 +87,3 @@ private:
     std::int64_t m_blockSize;
     std::vector<std::string> m_keys;
 };
-
-
-#endif /*KEYPOOLMANAGER_HPP*/
