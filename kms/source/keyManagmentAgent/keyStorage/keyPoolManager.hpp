@@ -1,22 +1,21 @@
 #pragma once
 
-#include "keyPool.hpp"
-
-#include <string>
-#include <vector>
-#include <mutex>
-#include <memory>
-#include <condition_variable>
 #include <unordered_map>
+#include <mutex>
+#include <string>
+#include <memory>
+#include <vector>
+#include <condition_variable>
 
-#include "util/util.hpp"
+#include "keyManagmentAgent/keyStorage/keyPool.hpp"
+
 
 class KeyPoolManager {
 
 public:
 
     class PoolLock {
-    public:
+public:
         bool inProgress;
         std::mutex lock;
         std::condition_variable signal;
@@ -36,112 +35,119 @@ public:
         }
     };
 
-
+public:
     KeyPoolManager(int byteSz, long blockSz, const std::string& localSiteId,
-                   const std::string& poolsDir, const std::string& qnlIP, int qnlPort) :
-        byteSz(byteSz), blockSz(blockSz), localSiteId(localSiteId), poolsDir(poolsDir),
-        qnlIP(qnlIP), qnlPort(qnlPort) {}
-
+    const std::string& poolsDir, const std::string& qnlIP, int qnlPort)
+    : m_byteSz{byteSz}, m_blockSz{blockSz}, m_localSiteId{localSiteId},
+        m_poolsDir{poolsDir}, m_qnlIP{qnlIP}, m_qnlPort{qnlPort} {}
+    
     // return the size of a single key in bytes
-    int getKeyByteSize(){
-        return byteSz;
+    int getKeyByteSize() const{
+        return m_byteSz;
     }
 
     // return the size of a key block in bytes
-    long getKeyBlockSize(){
-        return blockSz;
+    long getKeyBlockSize() const{
+        return m_blockSz;
     }
 
     // return the local site ID
-    std::string getLocalSiteId(){
-        return localSiteId;
+    std::string getLocalSiteId() const{
+        return m_localSiteId;
     }
 
     // create a new key and return it
     Key newKey(const std::string siteId){
-
-        if (siteId.empty()) {
-           throw std::invalid_argument("Site ID cannot be empty");
-        }
         try {
+            if (siteId.empty()) {
+                throw std::invalid_argument("Site ID cannot be empty");
+            }
             Key key = fetchKey(siteId, "", -1L);
             return key;
-        } catch (const std::exception& e) {
-            std::throw_with_nested(std::runtime_error("An error occurred while creating a new Key"));
+        }
+        catch (const std::exception& e) {
+            std::cerr << "An error occurred while creating a new Key: " << e.what() << std::endl;
+            throw;
         }
     }
-    
 
     // get a key at a specific index within a block for the given site
     Key getKey(const std::string& siteId, const std::string& block, long index){
-        if (siteId.empty()) {
-            throw std::invalid_argument("Site ID cannot be empty");
-        }
-
-        if (block.empty()) {
-            throw std::invalid_argument("Block must not be empty");
-        }
-
-        if (index < 0) {
-            throw std::out_of_range("Index must be non-negative");
-        }
-
         try {
+            if (siteId.empty()) {
+                throw std::invalid_argument("Site ID cannot be empty");
+            }
+            if (block.empty()) {
+                throw std::invalid_argument("Block must not be empty");
+            }
+            if (index < 0) {
+                throw std::out_of_range("Index must be non-negative");
+            }
             Key key = fetchKey(siteId, block, index);
             return key;
-        } catch (...) {
-            std::throw_with_nested(std::runtime_error("An error occurred"));
+        }
+        catch (...) {
+            std::cerr << "An error occurred while getting a Key" << std::endl;
+            throw;
         }
     }
-    
+
+
 private:
 
-    bool containsPoolLock(const std::string& poolName){
+    bool containsPoolLock(const std::string& poolName) const{
         return (m_poolLocks.find(poolName) != m_poolLocks.end());
     }
 
     std::shared_ptr<PoolLock> keyPoolLock(const std::string& poolName){
-        auto it = m_poolLocks.find(poolName); // find the iterator for the given poolName
-        if (it == m_poolLocks.end()) { // check if poolName not found in m_poolLocks
-            // handle error or throw exception
-            throw std::runtime_error("Pool name not found");
+        auto it = m_poolLocks.find(poolName);
+        if (it == m_poolLocks.end()) {
+            // Create a new lock for the pool
+            auto newLock = std::make_shared<PoolLock>();
+            m_poolLocks.insert(make_pair(poolName, newLock));
+            return newLock;
         }
-        return it->second;
+        else {
+            return it->second;
+        }
     }
-
-    // fetch a key based on its index or the ID of the block it belongs to
     Key fetchKey(const std::string& siteId, const std::string& inBlockId, long ind){
         std::string blockId = inBlockId.empty() ? "" : inBlockId;
-        std::string srcSiteId = (ind < 0) ? localSiteId : siteId;
-        std::string dstSiteId = (ind < 0) ? siteId : localSiteId;
+        std::string srcSiteId = (ind < 0) ? m_localSiteId : siteId;
+        std::string dstSiteId = (ind < 0) ? siteId : m_localSiteId;
         std::string poolName = srcSiteId + dstSiteId;
+
         bool isInProgress = false;
-    
-        // check if a valid key pool exists for this site pair
+
+        // Check if a valid key pool exists for this site pair
         if (containsPool(poolName)) {
             return key(poolName, ind);
         }
-    
-        // check if another thread is already fetching the key pool
+
+        // Check if another thread is already fetching the key pool
         if (containsPoolLock(poolName)) {
-            try{
-                std::shared_ptr<PoolLock> lock = keyPoolLock(poolName);
-                
+            try {
+                auto lock = keyPoolLock(poolName);
                 std::unique_lock<std::mutex> lck(lock->lock);
                 while (lock->inProgress) {
                     lock->signal.wait(lck);
                 }
                 isInProgress = true;
-            } catch (const std::runtime_error& e) {
-                throw e;
             }
-        } else {
-            std::shared_ptr<PoolLock> newPoolLock;
-            m_poolLocks.insert(std::make_pair(poolName, newPoolLock));
+            catch (const std::runtime_error& e) {
+                std::cerr << "An error occurred while locking the KeyPoolManager: " << e.what() << std::endl;
+                throw;
+            }
         }
-    
-        // acquire initialization lock and ensure that no other thread initialized the pool
-        std::unique_lock<std::mutex> initPoolLck(this->m_initPoolMutex);
+        else {
+            // Create a new lock for the pool and mark it as in progress
+            auto newPoolLock = std::make_shared<PoolLock>();
+            newPoolLock->inProgress = true;
+            m_poolLocks.insert(make_pair(poolName, newPoolLock));
+        }
+
+        // Acquire initialization lock and ensure that no other thread initialized the pool
+        std::unique_lock<std::mutex> initPoolLck(m_initPoolMutex);
         if (containsPool(poolName)) {
             if (isInProgress) {
                 keyPoolLock(poolName)->signal.notify_all();
@@ -149,7 +155,7 @@ private:
             return key(poolName, ind);
         }
         if (containsPoolLock(poolName) && keyPoolLock(poolName)->inProgress) {
-            std::shared_ptr<PoolLock> lock = keyPoolLock(poolName);
+            auto lock = keyPoolLock(poolName);
             std::unique_lock<std::mutex> lck(lock->lock);
             while (lock->inProgress) {
                 lock->signal.wait(lck);
@@ -159,41 +165,46 @@ private:
             m_poolLocks[poolName]->inProgress = true;
             isInProgress = false;
         }
-    
+
         try {
-            // do the actual fetching work
+            // Do the actual fetching work
             std::vector<std::string> keyBlockDst;
             if (blockId.empty() && ind < 0) {
-                blockId = keyReader.read(localSiteId, siteId, keyBlockDst,
-                                         qnlIP, qnlPort, poolsDir, static_cast<int>(blockSz), byteSz);
+                // Block ID and index not specified - try to read from remote server
+                // blockId = QNLKeyReader->read(m_localSiteId, siteId, keyBlockDst,
+                //     m_poolsDir, m_poolsDir, m_poolsDir, static_cast<int>(m_blockSz), m_byteSz);
                 if (blockId.empty()) {
-                    throw std::runtime_error("Failed to read a valid key block from key reader.");
+                    throw std::runtime_error("Failed to read a valid key block from remote server.");
                 }
-            } else {
-                keyReader.read(siteId, localSiteId, blockId, keyBlockDst, poolsDir, blockSz);
             }
-            KeyPool kp(blockId, blockSz, keyBlockDst);
-            m_keyPools.emplace(poolName, kp);
+            else {
+                // Block ID and/or index specified - read from local storage
+                // QNLKeyReader->read(siteId, m_localSiteId, blockId, keyBlockDst, m_poolsDir, m_blockSz);
+            }
+            // Create a new key pool for this site pair and mark the lock as no longer in progress
+            KeyPool kp(blockId, m_blockSz, keyBlockDst);
+            m_keyPools.emplace(poolName, std::make_shared<KeyPool>(kp));
             if (isInProgress) {
                 keyPoolLock(poolName)->signal.notify_all();
             } else {
                 m_poolLocks[poolName]->inProgress = false;
             }
             return key(poolName, ind);
-        } catch (const std::exception&) {
+        }
+        catch (...) {
+            // Cleanup on failure and re-throw the exception
             if (isInProgress) {
                 keyPoolLock(poolName)->signal.notify_all();
-            } else {
+            }
+            else {
                 m_poolLocks.erase(poolName);
                 m_keyPools.erase(poolName);
             }
-            return Key();
+            throw;
         }
     }
-    
 
-    // check if a valid key pool exists for the given site pair
-    bool containsPool(const std::string& poolName){
+    bool containsPool(const std::string& poolName) const{
         auto it = m_keyPools.find(poolName);
         if (it == m_keyPools.end()) {
             return false;
@@ -201,29 +212,30 @@ private:
         return it->second->isValid();
     }
 
-    // get a key from the specified pool and index
     Key key(const std::string& poolName, int index){
         auto it = m_keyPools.find(poolName);
         if (it == m_keyPools.end()) {
-            return Key();
+            throw std::runtime_error("Key not found");
         }
+        if(index < 0)
+            return it->second->getKey();
+
         return it->second->getKey(index);
     }
 
-    
-public: 
+    int m_byteSz;
+    long m_blockSz;
+    std::string m_localSiteId;
+    std::string m_poolsDir;
+    std::string m_qnlIP;
+    int m_qnlPort;
+
     std::unordered_map<std::string, std::shared_ptr<PoolLock>> m_poolLocks;
-
-private:
-
-    int byteSz;
-    long blockSz;
-    std::string localSiteId;
-    std::string poolsDir;
-    std::string qnlIP;
-    int qnlPort;
-    // QNLKeyReader keyReader;
-    
     std::unordered_map<std::string, std::shared_ptr<KeyPool>> m_keyPools;
-    std::mutex m_initPoolMutex;
+    mutable std::mutex m_initPoolMutex;
+
+
 };
+
+
+

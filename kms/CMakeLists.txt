@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 
 set(project_name SpeQtral-QKD) ## rename your project here
-
+set(CMAKE_VERBOSE_MAKEFILE ON)
 project(${project_name})
 
 set(CMAKE_CXX_COMPILER "clang++")
@@ -17,8 +17,9 @@ find_package(yaml-cpp REQUIRED)
 
 add_library(${project_name}-lib
         ${src_folder}/AppComponent.hpp
+        ${src_folder}/keyManagmentAgent/keyStorage/keyPoolManager.hpp
         ${src_folder}/keySupplyAgent/keySupplyAgent.hpp
-        ${src_folder}/dto/DTOs.hpp
+        ${src_folder}/dto/KMSAgentDTOs.hpp
 )
 
 target_link_libraries(${project_name}-lib

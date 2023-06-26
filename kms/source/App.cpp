@@ -9,6 +9,8 @@
 #include "oatpp-swagger/Controller.hpp"
 #include <yaml-cpp/yaml.h>
 
+
+#include "keyManagmentAgent/keyStorage/keyPoolManager.hpp"
 #include "keySupplyAgent/keySupplyAgent.hpp"
 #include "AppComponent.hpp"
 

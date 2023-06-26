@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <unistd.h>
-
+#include <memory>
 
 
 #include "oatpp/web/server/HttpConnectionHandler.hpp"
@@ -14,6 +14,11 @@
 #include "oatpp-swagger/Model.hpp"
 #include "oatpp-swagger/Resources.hpp"
 #include <yaml-cpp/yaml.h>
+
+
+#include "util/serverDefaultConfig.hpp"
+#include "keyManagmentAgent/keyStorage/keyPoolManager.hpp"
+#include "keyManagmentAgent/keyStorage/keyPoolManagerDefaultConfig.hpp"
 
 #define PORT_SUFFIX "_PORT"
 
@@ -36,7 +41,6 @@ enum ServicesList{
     AUTHSERVICE,
     RESTE,
 };
-
 
 /**
  *  Class which creates and holds Application components and registers components in oatpp::base::Environment
@@ -88,7 +92,7 @@ public:
     .setTitle("My Demo Service with Swagger-UI")
     .setDescription("C++/oat++ Web Service with Swagger-UI")
     .setVersion("1.0")
-    .setContactName("Mr. Developer")
+    .setContactName("Edward Guyot")
     .setContactUrl("https://oatpp.io/")
     .setLicenseName("Apache License, Version 2.0")
     .setLicenseUrl("http://www.apache.org/licenses/LICENSE-2.0")
@@ -113,6 +117,13 @@ public:
     isINIT = true;
   }
   
+  OATPP_CREATE_COMPONENT(std::shared_ptr<KeyPoolManager>, keyPoolManager)([this] {
+    return std::make_shared<KeyPoolManager>(DEFAULT_BYTE_SZ ,static_cast<long>(DEFAULT_BLOCK_SZ),
+      static_cast<const std::string&>(DEFAULT_LOCAL_SITE_ID) ,
+      static_cast<const std::string&>(DEFAULT_POOLS_DIR) ,
+      static_cast<const std::string&>(DEFAULT_QNL_IP) ,
+      static_cast<int>(DEFAULT_QNL_PORT) );
+  }());
 
 private:
   /**

@@ -48,42 +48,56 @@ public:
      *
      * @return The index of the key.
      */
-    long getIndex() const;
+    long getIndex() const{ 
+        std::lock_guard<std::mutex> lock(m_mutex);
+        return m_index; 
+    }
 
     /**
      * Sets the index of the key to the specified value.
      *
      * @param index The new index of the key.
      */
-    void setIndex(int index);
+    void setIndex(int index){ 
+        std::lock_guard<std::mutex> lock(m_mutex);
+        m_index = index;
+    }
 
     /**
      * Returns the hexadecimal representation of the key.
      *
      * @return The hexadecimal representation of the key.
      */
-    const std::string& getHexKey() const;
+    const std::string& getHexKey() const{ 
+        return m_hexKey; 
+    }
 
     /**
      * Sets the hexadecimal representation of the key to the specified value.
      *
      * @param hexKey The new hexadecimal representation of the key.
      */
-    void setHexKey(const std::string& hexKey);
+    void setHexKey(const std::string& hexKey) { 
+        m_hexKey = hexKey; 
+    }
 
     /**
      * Returns the ID of the block associated with this key.
      *
      * @return The ID of the block associated with this key.
      */
-    const std::string& getBlockID() const;
+    const std::string& getBlockID() const{ 
+        return m_blockID; 
+    }
 
     /**
      * Sets the ID of the block associated with this key to the specified value.
      *
      * @param blockID The new ID of the block associated with this key.
      */
-    void setBlockID(const std::string& blockID);
+    void setBlockID(const std::string& blockID){ 
+        m_blockID = blockID; 
+    }
 
 private:
     mutable std::mutex m_mutex;
