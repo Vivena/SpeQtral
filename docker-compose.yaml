@@ -1,0 +1,53 @@
+version: '3.3'
+
+services:
+  a:
+    build: .
+    ports:
+      - "${API_HOST_PORT_A}:${API_CONTAINER_PORT}"
+      - "${OAUTH_HOST_PORT_A}:${OAUTH_CONTAINER_PORT}"
+      - "${KEY_ROUTING_CONTAINER_PORT}/tcp"
+      - "${KMS_QNK_CONTAINER_PORT}/tcp"
+    networks:
+      - ab
+    environment:
+      - DEPLOYMENT_NAME=a
+    volumes:
+      - ./routes:/app/routes
+    
+
+  b:
+    build: .
+    ports:
+      - "${API_HOST_PORT_B}:${API_CONTAINER_PORT}"
+      - "${OAUTH_HOST_PORT_B}:${OAUTH_CONTAINER_PORT}"
+      - "${KEY_ROUTING_CONTAINER_PORT}/tcp"
+      - "${KMS_QNK_CONTAINER_PORT}/tcp"
+    networks:
+      - ab
+      - bc
+    environment:
+      - DEPLOYMENT_NAME=b
+    volumes:
+      - ./path/to/local/folder:/usr/share/nginx/html
+    
+
+  c:
+    build: .
+    ports:
+      - "${API_HOST_PORT_C}:${API_CONTAINER_PORT}"
+      - "${OAUTH_HOST_PORT_C}:${OAUTH_CONTAINER_PORT}"
+      - "${KEY_ROUTING_CONTAINER_PORT}/tcp"
+      - "${KMS_QNK_CONTAINER_PORT}/tcp"
+    networks:
+      - bc
+    environment:
+      - DEPLOYMENT_NAME=c
+    volumes:
+      - ./path/to/local/folder:/usr/share/nginx/html
+    
+      
+networks:
+  ab:
+  bc:
+

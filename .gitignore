@@ -2,3 +2,4 @@
 .vscode/settings.json
 kms/build/*
 build/*
+qkd-net/*
