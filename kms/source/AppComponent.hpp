@@ -15,7 +15,7 @@
 #include "oatpp-swagger/Resources.hpp"
 #include <yaml-cpp/yaml.h>
 
-
+#include "Constants.hpp"
 #include "util/serverDefaultConfig.hpp"
 #include "keyManagmentAgent/keyStorage/keyPoolManager.hpp"
 #include "keyManagmentAgent/keyStorage/keyPoolManagerDefaultConfig.hpp"
@@ -54,25 +54,36 @@ public:
   , m_config(config)
   {}
 
-  OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::network::ServerConnectionProvider>, KeySupplyProvider)([this]() -> std::shared_ptr<oatpp::network::ServerConnectionProvider> {
-    
-    auto port = getPort(KEYSUPPLYAGENT);
+// TODO: refacto and put everything in the appropriate header
 
-    return oatpp::network::tcp::server::ConnectionProvider::createShared({"0.0.0.0", port, oatpp::network::Address::IP_4});
-  }());
+  OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::network::ServerConnectionProvider>, KeySupplyProvider)(Qualifiers::KEYSUPPLY_SERVICE, [this]() -> std::shared_ptr<oatpp::network::ServerConnectionProvider> {
+      auto port = getPort(KEYSUPPLYAGENT);
+      return oatpp::network::tcp::server::ConnectionProvider::createShared({"0.0.0.0", 12345, oatpp::network::Address::IP_4});
+    }());
+  
+  OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::network::ServerConnectionProvider>, QuantumNetworkProvider)(Qualifiers::QUANTUMNETWORK_SERVICE, [this]() -> std::shared_ptr<oatpp::network::ServerConnectionProvider> {
+      auto port = getPort(AUTHSERVICE);
+      return oatpp::network::tcp::server::ConnectionProvider::createShared({"0.0.0.0", 23456, oatpp::network::Address::IP_4});
+    }());
   
   /**
    *  Create Router component
    */
-  OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::web::server::HttpRouter>, KeySupplyhttpRouter)([] {
+  OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::web::server::HttpRouter>, KeySupplyhttpRouter)(Qualifiers::KEYSUPPLY_SERVICE, [] {
     return oatpp::web::server::HttpRouter::createShared();
   }());
-  
+  OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::web::server::HttpRouter>, QuantumNetworkhttpRouter)(Qualifiers::QUANTUMNETWORK_SERVICE, [] {
+    return oatpp::web::server::HttpRouter::createShared();
+  }());
   /**
    *  Create ConnectionHandler component which uses Router component to route requests
    */
-  OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::network::ConnectionHandler>, KeySupplyserverConnectionHandler)([] {
-    OATPP_COMPONENT(std::shared_ptr<oatpp::web::server::HttpRouter>, router); // get Router component
+  OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::network::ConnectionHandler>, KeySupplyserverConnectionHandler)(Qualifiers::KEYSUPPLY_SERVICE, [] {
+    OATPP_COMPONENT(std::shared_ptr<oatpp::web::server::HttpRouter>, router, Qualifiers::KEYSUPPLY_SERVICE); // get Router component
+    return oatpp::web::server::HttpConnectionHandler::createShared(router);
+  }());
+  OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::network::ConnectionHandler>, QuantumNetworkserverConnectionHandler)(Qualifiers::QUANTUMNETWORK_SERVICE, [] {
+    OATPP_COMPONENT(std::shared_ptr<oatpp::web::server::HttpRouter>, router, Qualifiers::QUANTUMNETWORK_SERVICE); // get Router component
     return oatpp::web::server::HttpConnectionHandler::createShared(router);
   }());
   
@@ -82,6 +93,7 @@ public:
   OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::data::mapping::ObjectMapper>, KeySupplyapiObjectMapper)([] {
     return oatpp::parser::json::mapping::ObjectMapper::createShared();
   }());
+  
 
   OATPP_CREATE_COMPONENT(
   std::shared_ptr<oatpp::swagger::DocumentInfo>, 
@@ -106,16 +118,10 @@ public:
   OATPP_CREATE_COMPONENT(
       std::shared_ptr<oatpp::swagger::Resources>, 
       swaggerResources
-    )([] {  return oatpp::swagger::Resources::loadResources(
+    )(Qualifiers::KEYSUPPLY_SERVICE, [] {  return oatpp::swagger::Resources::loadResources(
         OATPP_SWAGGER_RES_PATH
       );}());
   
-  /**
-   * This function sets the `isINIT` flag to true.
-   */
-  void setINIT(){
-    isINIT = true;
-  }
   
   OATPP_CREATE_COMPONENT(std::shared_ptr<KeyPoolManager>, keyPoolManager)([this] {
     return std::make_shared<KeyPoolManager>(DEFAULT_BYTE_SZ ,static_cast<long>(DEFAULT_BLOCK_SZ),

@@ -44,6 +44,7 @@ COPY ./scripts/build-and-run.sh /app
 WORKDIR /app/qkd-net/kms
 
 # Define the entry point script
+# ENTRYPOINT ["tail", "-f", "/dev/null"]
 ENTRYPOINT ["/bin/bash","./scripts/run"]
 
 # Define the default command to run when the container starts

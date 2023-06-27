@@ -5,7 +5,7 @@
 #include <string>
 #include <cstdint>
 
-#include "keyManagmentAgent/key.hpp"
+#include "keyManagmentAgent/key/key.hpp"
 
 /**
  * Represents a cryptographic keyPool that consists of an index, a block ID, and a block size and multiple keys.

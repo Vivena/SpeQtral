@@ -16,14 +16,14 @@
 /**
  * Sample Api Controller.
  */
-class KeySupplyAgent : public oatpp::web::server::api::ApiController {
+class QuantumNetworkAgent : public oatpp::web::server::api::ApiController {
 public:
   /**
    * Constructor with object mapper.
    * @param objectMapper - default object mapper used to serialize/deserialize DTOs.
    * @param keyPoolManager - object for managing keys
    */
-  KeySupplyAgent(OATPP_COMPONENT(std::shared_ptr<ObjectMapper>, objectMapper),
+  QuantumNetworkAgent(OATPP_COMPONENT(std::shared_ptr<ObjectMapper>, objectMapper),
                  OATPP_COMPONENT(std::shared_ptr<KeyPoolManager>, keyPoolManager))
     : oatpp::web::server::api::ApiController(objectMapper)
     , m_keyPoolMgr(keyPoolManager)
@@ -32,8 +32,8 @@ public:
 public:
 
   ENDPOINT("GET","/kmapi/versions", getVersion){
-    
-    return createDtoResponse(Status::CODE_200, dto);
+    auto dtoOut = ACK_containers::createShared();
+    return createDtoResponse(Status::CODE_200, dtoOut);
   }
 
   

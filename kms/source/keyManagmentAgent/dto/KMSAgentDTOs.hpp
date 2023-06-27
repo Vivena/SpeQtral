@@ -80,9 +80,9 @@ class GetKeyWithIDDto : public oatpp::DTO {
 };
 
 
-class Keys : public oatpp::DTO {
+class KeysDTO : public oatpp::DTO {
 
-  DTO_INIT(Keys, DTO)
+  DTO_INIT(KeysDTO, DTO)
 
   DTO_FIELD(String, key_ID);
   DTO_FIELD(Any, key_ID_extension) = nullptr;

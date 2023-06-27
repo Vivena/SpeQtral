@@ -43,9 +43,9 @@ class TransferKeyDto : public oatpp::DTO {
 
 };
 
-class Keys_ID : public oatpp::DTO {
+class Keys_IDDto : public oatpp::DTO {
 
-  DTO_INIT(Keys_ID, DTO)
+  DTO_INIT(Keys_IDDto, DTO)
 
   DTO_FIELD(String, key_ID);
   DTO_FIELD(Any, extension) = nullptr;
@@ -56,7 +56,7 @@ class ACK_containers : public oatpp::DTO {
 
   DTO_INIT(ACK_containers, DTO)
 
-  DTO_FIELD(List<Keys_ID>, key_ids);
+  DTO_FIELD(List<Object<Keys_IDDto>>, key_ids);
   DTO_FIELD(String, ack_status);
   DTO_FIELD(String, initiator_sae_id);
   DTO_FIELD(String, target_sae_id);

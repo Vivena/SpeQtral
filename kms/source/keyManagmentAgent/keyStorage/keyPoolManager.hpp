@@ -8,6 +8,7 @@
 #include <condition_variable>
 
 #include "keyManagmentAgent/keyStorage/keyPool.hpp"
+#include "keyManagmentAgent/keyStorage/keyPoolManagerDefaultConfig.hpp"
 
 
 class KeyPoolManager {
@@ -41,6 +42,18 @@ public:
     : m_byteSz{byteSz}, m_blockSz{blockSz}, m_localSiteId{localSiteId},
         m_poolsDir{poolsDir}, m_qnlIP{qnlIP}, m_qnlPort{qnlPort} {}
     
+    KeyPoolManager(std::shared_ptr<oatpp::base::CommandLineArguments> args, std::shared_ptr<YAML::Node> config){
+        m_byteSz=DEFAULT_BYTE_SZ; 
+        m_blockSz=static_cast<long>(DEFAULT_BLOCK_SZ); 
+        m_localSiteId=static_cast<const std::string&>(DEFAULT_LOCAL_SITE_ID);
+        m_poolsDir=static_cast<const std::string&>(DEFAULT_POOLS_DIR);
+        m_qnlIP=static_cast<const std::string&>(DEFAULT_QNL_IP);
+        m_qnlPort=static_cast<int>(DEFAULT_QNL_PORT);
+ 
+        // TODO: allow to change those value based on config and args
+
+    }
+
     // return the size of a single key in bytes
     int getKeyByteSize() const{
         return m_byteSz;

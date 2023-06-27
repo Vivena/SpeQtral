@@ -6,7 +6,7 @@
 #include "oatpp/core/macro/component.hpp"
 
 
-#include "dto/KMSAgentDTOs.hpp"
+#include "keyManagmentAgent/dto/KMSAgentDTOs.hpp"
 #include "keyManagmentAgent/keyStorage/keyPoolManager.hpp"
 #include "keyManagmentAgent/keyStorage/keyPoolManagerDefaultConfig.hpp"
 

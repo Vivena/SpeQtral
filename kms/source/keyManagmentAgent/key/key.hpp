@@ -104,6 +104,7 @@ private:
     long m_index;
     std::string m_hexKey;
     std::string m_blockID;
+    std::string m_uuid;
 };
 
 #endif /*KEY_HPP*/
