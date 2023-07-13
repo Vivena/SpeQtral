@@ -1,1 +1,0 @@
-curl 'http://localhost:${API_HOST_PORT_A}/api/newkey?siteid=B' -H"Authorization: Bearer ${oauth-a-token}" | jq

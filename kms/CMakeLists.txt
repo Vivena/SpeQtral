@@ -19,7 +19,8 @@ add_library(${project_name}-lib
         ${src_folder}/AppComponent.hpp
         ${src_folder}/keyManagmentAgent/keyStorage/keyPoolManager.hpp
         ${src_folder}/keySupplyAgent/keySupplyAgent.hpp
-        ${src_folder}/dto/KMSAgentDTOs.hpp
+        ${src_folder}/dto/QNLAgentDTOs.hpp
+        ${src_folder}/keyManagmentAgent/dto/KMSAgentDTOs.hpp
 )
 
 target_link_libraries(${project_name}-lib

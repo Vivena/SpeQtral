@@ -69,7 +69,6 @@ void run(std::shared_ptr<oatpp::base::CommandLineArguments> args, std::shared_pt
   /* Run server */
   std::list<std::thread> acceptingThreads;
 
-  // server.run();
   // TODO: put in its own runner class
   acceptingThreads.push_back(std::thread([KeySupplyhttpRouter, KeySupplyserverConnectionHandler]{
 

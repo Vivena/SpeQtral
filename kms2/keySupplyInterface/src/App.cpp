@@ -1,8 +1,5 @@
-#include "oatpp/web/server/api/ApiController.hpp"
-#include "oatpp/parser/json/mapping/ObjectMapper.hpp"
-#include "oatpp/core/macro/codegen.hpp"
-#include "oatpp/core/macro/component.hpp"
-
+#include "AppComponent.hpp"
+#include "Runner.hpp"
 
 void run() {
 
@@ -21,10 +18,5 @@ void run() {
   for(auto& thread : acceptingThreads) {
     thread.join();
   }
-
-}
-
-int main(int argc, const char * argv[]) {
-
 
 }
