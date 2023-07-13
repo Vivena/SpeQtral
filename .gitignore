@@ -3,3 +3,6 @@
 kms/build/*
 build/*
 qkd-net/*
+
+kms2/keySupplyInterface/build/*
+kms2/monolith/all-services/build/*

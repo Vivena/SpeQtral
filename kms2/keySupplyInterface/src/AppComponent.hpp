@@ -70,12 +70,12 @@ public:
     return oatpp::parser::json::mapping::ObjectMapper::createShared();
   }());
 
-  /**
-   *  Create Demo-Database component which stores information about books
-   */
-  OATPP_CREATE_COMPONENT(std::shared_ptr<db::Database>, database)(Qualifiers::INTERFACE_KEYSUPPLY, [] {
-    return std::make_shared<db::Database>();
-  }());
+  // /**
+  //  *  Create Demo-Database component which stores information about books
+  //  */
+  // OATPP_CREATE_COMPONENT(std::shared_ptr<db::Database>, database)(Qualifiers::INTERFACE_KEYSUPPLY, [] {
+  //   return std::make_shared<db::Database>();
+  // }());
 
 };
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "keyStore/keyStorage/keyPool.hpp"
+#include "kms2/keyStore/keyStorage/keyPool.hpp"
 
 #include "oatpp/core/macro/codegen.hpp"
 #include "oatpp/core/Types.hpp"
