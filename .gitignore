@@ -6,7 +6,6 @@ qkd-net/*
 
 kms/keySupplyInterface/build/*
 kms/monolith/all-services/build/*
-kms/monolith/all-services/App.cpp
 kms/keyStore/build/*
 kms/keyStoreManager/build/*
 kms/qkdModuleInterface/build/*
