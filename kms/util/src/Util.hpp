@@ -1,8 +1,12 @@
 #ifndef util_hpp
 #define util_hpp
 
+#include <yaml-cpp/yaml.h>
+
 #include <algorithm>
 #include "ServerDefaultConfig.hpp"
+
+#include <oatpp/core/base/CommandLineArguments.hpp>
 
 #define PORT_SUFFIX "_PORT"
 

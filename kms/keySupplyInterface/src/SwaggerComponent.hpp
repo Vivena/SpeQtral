@@ -8,6 +8,8 @@
 #include "oatpp-swagger/Resources.hpp"
 #include "oatpp/core/macro/component.hpp"
 
+#include "../../util/src/ServerDefaultConfig.hpp"
+
 namespace kms { namespace keySupply {
 
     class SwaggerComponent {
@@ -21,15 +23,15 @@ namespace kms { namespace keySupply {
             oatpp::swagger::DocumentInfo::Builder builder;
 
             builder
-            .setTitle("Book Entity Service")
-            .setDescription("Monolithization Example")
-            .setVersion("1.0")
-            .setContactName("Oat++ Framework")
-            .setContactUrl("https://oatpp.io/")
+            .setTitle(TITLE)
+            .setDescription(DESCRIPTION)
+            .setVersion(VERSION)
+            .setContactName(CONTACT_NAME)
+            .setContactUrl(CONTACT_URL)
 
             .setLicenseName("The Unlicense")
 
-            .addServer("http://localhost:9060", "server on localhost");
+            .addServer("http://localhost:" + std::to_string(KEYSUPPLYAGENT_DEFAULT_PORT), "server on localhost");;
 
             return builder.build();
 

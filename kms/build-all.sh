@@ -20,6 +20,7 @@ build_service keyStore
 build_service qkdModuleInterface
 build_service keyStoreManager
 build_service keySupplyInterface
+build_service keyRelayInterface
 
 
 rm -rf monolith/all-services/build/

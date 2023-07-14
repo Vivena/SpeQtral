@@ -26,7 +26,7 @@ set(UTIL_DIR ${CMAKE_CURRENT_LIST_DIR}/../../util/build)
 set(KEYSTORE_MANAGER_DIR ${CMAKE_CURRENT_LIST_DIR}/../../keyStoreManager/build)
 
 set(KEYSUPPLY_INTERFACE_DIR ${CMAKE_CURRENT_LIST_DIR}/../../keySupplyInterface/build)
-set(KEYSUPPLY_INTERFACE_DIR ${CMAKE_CURRENT_LIST_DIR}/../../keyRelayInterface/build)
+set(KEYRELAY_INTERFACE_DIR ${CMAKE_CURRENT_LIST_DIR}/../../keyRelayInterface/build)
 
 
 FIND_LIBRARY(UTIL_LIBRARY
@@ -39,8 +39,13 @@ FIND_LIBRARY(KEYSTORE_MANAGER
         HINTS ${KEYSTORE_MANAGER_DIR}
 )
 
-FIND_LIBRARY(KEYRELAY_LIBRARY
+FIND_LIBRARY(KEYSUPPLY_LIBRARY
         NAMES keySupplyInterface-lib
+        HINTS ${KEYSUPPLY_INTERFACE_DIR}
+)
+
+FIND_LIBRARY(KEYRELAY_LIBRARY
+        NAMES keyRelayInterface-lib
         HINTS ${KEYRELAY_INTERFACE_DIR}
 )
 
@@ -52,8 +57,10 @@ target_include_directories(${project_name}-exe
 
 target_link_libraries(${project_name}-exe
         PUBLIC ${UTIL_LIBRARY}
-        PUBLIC ${KEYSUPPLY_LIBRARY}
         PUBLIC ${KEYSTORE_MANAGER}
+
+        PUBLIC ${KEYSUPPLY_LIBRARY}
+        PUBLIC ${KEYRELAY_LIBRARY}
 )
 
 
