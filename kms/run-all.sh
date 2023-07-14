@@ -1,0 +1,1 @@
+./monolith/all-services/build/all-services-exe

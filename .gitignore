@@ -4,5 +4,10 @@ kms/build/*
 build/*
 qkd-net/*
 
-kms2/keySupplyInterface/build/*
-kms2/monolith/all-services/build/*
+kms/keySupplyInterface/build/*
+kms/monolith/all-services/build/*
+kms/monolith/all-services/App.cpp
+kms/keyStore/build/*
+kms/keyStoreManager/build/*
+kms/qkdModuleInterface/build/*
+kms/util/build/*
