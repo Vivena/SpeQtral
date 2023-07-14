@@ -16,7 +16,7 @@
 
 enum ServicesList{
     KEYSUPPLYAGENT = 1,
-    AUTHSERVICE,
+    KEYRELAYAGENT,
     RESTE,
 };
 

@@ -26,8 +26,8 @@ public:
    * @param objectMapper - default object mapper used to serialize/deserialize DTOs.
    * @param keyPoolManager - object for managing keys
    */
-  KeySupplyAgent(OATPP_COMPONENT(std::shared_ptr<ObjectMapper>, objectMapper),
-                 OATPP_COMPONENT(std::shared_ptr<kms::keypool::manager::KeyPoolManager>, keyPoolManager))
+  KeySupplyAgent(OATPP_COMPONENT(std::shared_ptr<kms::keypool::manager::KeyPoolManager>, keyPoolManager),
+                OATPP_COMPONENT(std::shared_ptr<ObjectMapper>, objectMapper, Qualifiers::INTERFACE_KEYSUPPLY))
     : oatpp::web::server::api::ApiController(objectMapper)
     , m_keyPoolMgr(keyPoolManager)
   {}

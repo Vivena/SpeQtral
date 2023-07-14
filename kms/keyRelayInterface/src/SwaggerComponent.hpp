@@ -1,6 +1,6 @@
 
-#ifndef kms_keySupply_SwaggerComponent_hpp
-#define kms_keySupply_SwaggerComponent_hpp
+#ifndef kms_keyRelay_SwaggerComponent_hpp
+#define kms_keyRelay_SwaggerComponent_hpp
 
 #include "Constants.hpp"
 
@@ -8,7 +8,7 @@
 #include "oatpp-swagger/Resources.hpp"
 #include "oatpp/core/macro/component.hpp"
 
-namespace kms { namespace keySupply {
+namespace kms { namespace keyRelay {
 
     class SwaggerComponent {
     public:
@@ -16,7 +16,7 @@ namespace kms { namespace keySupply {
     /**
    *  General API docs info
    */
-        OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::swagger::DocumentInfo>, swaggerDocumentInfo)(Qualifiers::INTERFACE_KEYSUPPLY, [] {
+        OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::swagger::DocumentInfo>, swaggerDocumentInfo)(Qualifiers::INTERFACE_KEYRELAY, [] {
 
             oatpp::swagger::DocumentInfo::Builder builder;
 
@@ -29,7 +29,7 @@ namespace kms { namespace keySupply {
 
             .setLicenseName("The Unlicense")
 
-            .addServer("http://localhost:8002", "server on localhost");
+            .addServer("http://localhost:9060", "server on localhost");
 
             return builder.build();
 
@@ -38,7 +38,7 @@ namespace kms { namespace keySupply {
         /**
          *  Swagger-Ui Resources (<oatpp-examples>/lib/oatpp-swagger/res)
          */
-        OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::swagger::Resources>, swaggerResources)(Qualifiers::INTERFACE_KEYSUPPLY, [] {
+        OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::swagger::Resources>, swaggerResources)(Qualifiers::INTERFACE_KEYRELAY, [] {
             // Make sure to specify correct full path to oatpp-swagger/res folder !!!
             return oatpp::swagger::Resources::streamResources(OATPP_SWAGGER_RES_PATH);
         }());
@@ -47,4 +47,4 @@ namespace kms { namespace keySupply {
 
 }}
 
-#endif // kms_keySupply_Runner_hpp
+#endif // kms_keyRelay_Runner_hpp

@@ -23,13 +23,13 @@ class Runner {
 public:
   Runner(std::shared_ptr<kms::keypool::manager::KeyPoolManager> keyPoolManager){
 
-        OATPP_COMPONENT(std::shared_ptr<oatpp::data::mapping::ObjectMapper>, apiObjectMapper);
+        // OATPP_COMPONENT(std::shared_ptr<oatpp::data::mapping::ObjectMapper>, apiObjectMapper, , Qualifiers::INTERFACE_KEYSUPPLY);
         OATPP_COMPONENT(std::shared_ptr<oatpp::web::server::HttpRouter>, router, Qualifiers::INTERFACE_KEYSUPPLY);
 
         oatpp::web::server::api::Endpoints docEndpoints;
 
         /* Add KeySupplyController */
-        docEndpoints.append(router->addController(std::make_shared<kms::keySupply::controller::KeySupplyAgent>(apiObjectMapper, keyPoolManager))->getEndpoints());
+        docEndpoints.append(router->addController(std::make_shared<kms::keySupply::controller::KeySupplyAgent>(keyPoolManager))->getEndpoints());
 
         OATPP_COMPONENT(std::shared_ptr<oatpp::swagger::DocumentInfo>, documentInfo, Qualifiers::INTERFACE_KEYSUPPLY);
         OATPP_COMPONENT(std::shared_ptr<oatpp::swagger::Resources>, resources, Qualifiers::INTERFACE_KEYSUPPLY);

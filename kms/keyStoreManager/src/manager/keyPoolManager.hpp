@@ -1,4 +1,5 @@
-#pragma once
+#ifndef KEY_POOL_MANAGER_HPP
+#define KEY_POOL_MANAGER_HPP
 
 #include <unordered_map>
 #include <mutex>
@@ -267,3 +268,4 @@ private:
 
 }}}
 
+#endif

@@ -23,10 +23,10 @@ target_link_libraries(${project_name}-exe
 
 ## include directories
 set(UTIL_DIR ${CMAKE_CURRENT_LIST_DIR}/../../util/build)
-set(KEYSUPPLY_INTERFACE_DIR ${CMAKE_CURRENT_LIST_DIR}/../../keySupplyInterface/build)
 set(KEYSTORE_MANAGER_DIR ${CMAKE_CURRENT_LIST_DIR}/../../keyStoreManager/build)
-# set(BOOK_SERVICE_DIR ${CMAKE_CURRENT_LIST_DIR}/../../book-service/build)
-# set(FACADE_SERVICE_DIR ${CMAKE_CURRENT_LIST_DIR}/../../facade/build)
+
+set(KEYSUPPLY_INTERFACE_DIR ${CMAKE_CURRENT_LIST_DIR}/../../keySupplyInterface/build)
+set(KEYSUPPLY_INTERFACE_DIR ${CMAKE_CURRENT_LIST_DIR}/../../keyRelayInterface/build)
 
 
 FIND_LIBRARY(UTIL_LIBRARY
@@ -34,20 +34,20 @@ FIND_LIBRARY(UTIL_LIBRARY
         HINTS ${UTIL_DIR}
 )
 
-FIND_LIBRARY(KEYSUPPLY_LIBRARY
-        NAMES keySupplyInterface-lib
-        HINTS ${KEYSUPPLY_INTERFACE_DIR}
-)
-
 FIND_LIBRARY(KEYSTORE_MANAGER
         NAMES keyStoreManager-lib
         HINTS ${KEYSTORE_MANAGER_DIR}
 )
 
+FIND_LIBRARY(KEYRELAY_LIBRARY
+        NAMES keySupplyInterface-lib
+        HINTS ${KEYRELAY_INTERFACE_DIR}
+)
+
 
 target_include_directories(${project_name}-exe
-        PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../../keySupplyInterface/src
         PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../../keyStoreManager/src
+        PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../../keyRelayInterface/src
 )
 
 target_link_libraries(${project_name}-exe

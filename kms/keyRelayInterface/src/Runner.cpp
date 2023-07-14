@@ -2,28 +2,38 @@
 
 #include "AppComponent.hpp"
 
-#include "controller/KeySupplyInterfaceController.hpp"
+#include "controller/KeyRelayInterfaceController.hpp"
 
 #include "oatpp-swagger/Controller.hpp"
 #include "oatpp/web/server/HttpConnectionHandler.hpp"
 #include "oatpp/network/Server.hpp"
 
-namespace kms { namespace keySupply {
+namespace kms { namespace keyRelay {    
 
-    Runner::Runner() {
-    
-        OATPP_COMPONENT(std::shared_ptr<oatpp::web::server::HttpRouter>, router, Qualifiers::INTERFACE_KEYSUPPLY);
+    void Runner::run(std::list<std::thread>& acceptingThreads) {
 
-        oatpp::web::server::api::Endpoints docEndpoints;
+        /* Get router component */
+        OATPP_COMPONENT(std::shared_ptr<oatpp::web::server::HttpRouter>, router, Qualifiers::INTERFACE_KEYRELAY);
 
-        /* Add BookController */
-        docEndpoints.append(router->addController(std::make_shared<controller::BookController>())->getEndpoints());
+        /* Create connection handler */
+        auto connectionHandler = oatpp::web::server::HttpConnectionHandler::createShared(router);
 
-        OATPP_COMPONENT(std::shared_ptr<oatpp::swagger::DocumentInfo>, documentInfo, Qualifiers::INTERFACE_KEYSUPPLY);
-        OATPP_COMPONENT(std::shared_ptr<oatpp::swagger::Resources>, resources, Qualifiers::INTERFACE_KEYSUPPLY);
+        acceptingThreads.push_back(std::thread([router, connectionHandler]{
 
-        router->addController(oatpp::swagger::Controller::createShared(docEndpoints, documentInfo, resources));
+        OATPP_COMPONENT(std::shared_ptr<oatpp::network::ServerConnectionProvider>, connectionProvider, Qualifiers::INTERFACE_KEYRELAY);
+        oatpp::network::Server server(connectionProvider, connectionHandler);
+        OATPP_LOGI("keyRelay-Interface", "server is listening on port '%s'", connectionProvider->getProperty("port").getData());
+        server.run();
 
+        }));
+
+        acceptingThreads.push_back(std::thread([router, connectionHandler]{
+
+        OATPP_COMPONENT(std::shared_ptr<oatpp::network::ServerConnectionProvider>, connectionProvider, Qualifiers::INTERFACE_KEYRELAY_VH);
+        oatpp::network::Server server(connectionProvider, connectionHandler);
+        OATPP_LOGI("keyRelay-Interface", "server is listening on virtual interface '%s'", connectionProvider->getProperty("host").getData());
+        server.run();
+
+        }));
     }
-
 }}

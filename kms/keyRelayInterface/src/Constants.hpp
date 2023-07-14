@@ -1,14 +1,14 @@
 
-#ifndef kms_keySupply_Constants_hpp
-#define kms_keySupply_Constants_hpp
+#ifndef kms_keyRelay_Constants_hpp
+#define kms_keyRelay_Constants_hpp
 
-namespace kms { namespace keySupply {
+namespace kms { namespace keyRelay {
 
 class Qualifiers {
 public:
 
-  static constexpr const char* INTERFACE_KEYSUPPLY = "keySupply-interface";
-  static constexpr const char* INTERFACE_KEYSUPPLY_VH = "keySupply-interface.virtualhost";
+  static constexpr const char* INTERFACE_KEYRELAY = "keyRelay-interface";
+  static constexpr const char* INTERFACE_KEYRELAY_VH = "keyRelay-interface.virtualhost";
 
 };
 

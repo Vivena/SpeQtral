@@ -11,3 +11,4 @@ kms/keyStore/build/*
 kms/keyStoreManager/build/*
 kms/qkdModuleInterface/build/*
 kms/util/build/*
+kms/keyRelayInterface/build/*

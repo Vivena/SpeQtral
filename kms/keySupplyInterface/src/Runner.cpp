@@ -31,7 +31,7 @@ namespace kms { namespace keySupply {
 
         OATPP_COMPONENT(std::shared_ptr<oatpp::network::ServerConnectionProvider>, connectionProvider, Qualifiers::INTERFACE_KEYSUPPLY_VH);
         oatpp::network::Server server(connectionProvider, connectionHandler);
-        OATPP_LOGI("book-service", "server is listening on virtual interface '%s'", connectionProvider->getProperty("host").getData());
+        OATPP_LOGI("keySupply-Interface", "server is listening on virtual interface '%s'", connectionProvider->getProperty("host").getData());
         server.run();
 
         }));

@@ -29,7 +29,7 @@ namespace kms { namespace keySupply {
 
             .setLicenseName("The Unlicense")
 
-            .addServer("http://localhost:8002", "server on localhost");
+            .addServer("http://localhost:9060", "server on localhost");
 
             return builder.build();
 
