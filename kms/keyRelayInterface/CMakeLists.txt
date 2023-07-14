@@ -16,12 +16,12 @@ add_library(${project_name}-lib
 )
 
 ## include directories
-set(UTIL_DIR ${CMAKE_CURRENT_LIST_DIR}/../../util/build)
+# set(UTIL_DIR ${CMAKE_CURRENT_LIST_DIR}/../../util/build)
 
-FIND_LIBRARY(UTIL_LIBRARY
-        NAMES util-lib
-        HINTS ${UTIL_DIR}
-)
+# FIND_LIBRARY(UTIL_LIBRARY
+#         NAMES util-lib
+#         HINTS ${UTIL_DIR}
+# )
 
 target_include_directories(${project_name}-lib
         PUBLIC src

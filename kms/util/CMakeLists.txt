@@ -15,14 +15,24 @@ add_library(${project_name}-lib STATIC
         src/json.hpp
         src/Util.hpp
         src/Util.cpp
+        src/ServerDefaultConfig.hpp
 )
 
-target_link_libraries(${project_name}-lib PUBLIC oatpp::oatpp yaml-cpp)
+target_link_libraries(${project_name}-lib 
+        PUBLIC oatpp::oatpp 
+        PUBLIC yaml-cpp
+)
 
 ## include directories
 
 target_include_directories(${project_name}-lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
+# Include directories
 
+target_include_directories(${project_name}-lib 
+    PUBLIC 
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+        $<INSTALL_INTERFACE:include>
+)
 
 

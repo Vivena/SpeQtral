@@ -23,15 +23,13 @@ namespace kms { namespace keySupply {
             oatpp::swagger::DocumentInfo::Builder builder;
 
             builder
-            .setTitle(TITLE)
-            .setDescription(DESCRIPTION)
-            .setVersion(VERSION)
-            .setContactName(CONTACT_NAME)
-            .setContactUrl(CONTACT_URL)
-
-            .setLicenseName("The Unlicense")
-
-            .addServer("http://localhost:" + std::to_string(KEYSUPPLYAGENT_DEFAULT_PORT), "server on localhost");;
+            .setTitle("My Demo Service with Swagger-UI")
+            .setDescription("C++/oat++ Web Service with Swagger-UI")
+            .setVersion("1.0")
+            .setContactName("Edward Guyot")
+            .setContactUrl("https://oatpp.io/")
+            .setLicenseName("Apache License, Version 2.0")
+            .setLicenseUrl("http://www.apache.org/licenses/LICENSE-2.0");
 
             return builder.build();
 

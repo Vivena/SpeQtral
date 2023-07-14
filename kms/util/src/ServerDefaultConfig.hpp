@@ -5,7 +5,7 @@
 
 #define SUPPORTED_VERSIONS() \
   list("v1")
-#define VERSION "3.0"
+#define VERSION "1.0"
 #define TITLE "Demo QKD-KMS"
 #define DESCRIPTION "C++/oat++ QKD-KMS with Swagger-UI"
 #define CONTACT_NAME "Edward Guyot"
